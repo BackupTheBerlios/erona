@@ -1,4 +1,17 @@
 eRONA Changelog
 
+2005.02.18 - 0.2 "Lessie":
+* Cleaned up the code (still messy)
+* Atom Support
+* OPML wxport and import via URL
+* New db structure
+* Optimzied code and db structure
+* Nicer ui - still improvable, but much cleaner and friendlier
+* better update script, logs errors to db
+* moved all options to popups with fallback to frame usage
+* update counter, javascript part not finished
+* fully utf-8 compliant
+* many many other things you need to do after not touching the code for a year
+
 2004.03.19 - 0.1:
 * Initial public version
