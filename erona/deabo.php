@@ -1,12 +1,11 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
 
 include("connect.php");
 include("session.php");
 
 if ( (!isset($_SESSION['user_id'])) || ($_SESSION['public'] == 1) )
 {
-	header("Location: http://wwworker.com/erona/login.php");
+	header("Location: http://" . ERONA_URL . "login.php");
 }
 
 include("connect.php");
@@ -28,38 +27,38 @@ echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
 
 if ( (!isset($_GET['fid'])) || (!is_numeric($_GET['fid'])) )
 {
-    $meldung = "Kein Feed ausgewählt... Schade ;-)";
+	$meldung = "Kein Feed ausgew&auml;hlt... Schade ;-)";
 
 } else
 {
-    $id = $_GET['fid'];
-    $user_id = $_SESSION['user_id'];
-    
-    $sql = "SELECT COUNT(feed_id) as cid FROM user_feeds WHERE feed_id = $id AND user_id = $user_id";
-    $result = mysql_query($sql) or die (mysql_error() . $sql);
-    $row = mysql_fetch_array($result);
+	$id = $_GET['fid'];
+	$user_id = $_SESSION['user_id'];
 
-    if ($row['cid'] == 0)
-    {
-        $meldung = "Äh, Sie haben diesen Feed nicht abonniert...";
-    
-    } else
-    {
+	$sql = "SELECT COUNT(feed_id) as cid FROM user_feeds WHERE feed_id = $id AND user_id = $user_id";
+	$result = mysql_query($sql) or die (mysql_error() . $sql);
+	$row = mysql_fetch_array($result);
 
-        $sql = "DELETE FROM user_feeds WHERE user_id = $user_id AND feed_id = $id";
-        $result = mysql_query($sql) or die (mysql_error() . $sql);
+	if ($row['cid'] == 0)
+	{
+		$meldung = "Du hast doch garnicht abonniert...";
 
-        $sql = "UPDATE feeds SET reader = reader - 1 WHERE id = $id";
-        $result = mysql_query($sql) or die (mysql_error() . $sql);
+	} else
+	{
 
-        getFeeds("meine");
+		$sql = "DELETE FROM user_feeds WHERE user_id = $user_id AND feed_id = $id";
+		$result = mysql_query($sql) or die (mysql_error() . $sql);
 
-        $meldung = "Abonnement beendet...";
-    }
+		$sql = "UPDATE feeds SET reader = reader - 1 WHERE id = $id";
+		$result = mysql_query($sql) or die (mysql_error() . $sql);
+
+		getFeeds("meine");
+
+		$meldung = "Abonnement beendet...";
+	}
 }
 
 echo $meldung;
-echo '<br /><a onclick="parent.feedsFrame.location.reload()" href="' . urldecode($_GET['r']) . '">zurück</a>';
+echo '<br /><a onclick="parent.feedsFrame.location.reload();" href="myfeeds_index.php?s=meine">zurück</a>';
 ?>
 </body>
 </html>

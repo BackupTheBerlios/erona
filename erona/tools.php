@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
-
 session_start();
 
 /*
@@ -9,7 +7,7 @@ include("session.php");
 
 if (!isset($_SESSION['user_id']))
 {
-	header("Location: http://wwworker.com/erona/login.php");
+header("Location: http://" . ERONA_URL . "login.php");
 }
 
 $sql = "SELECT title, descr FROM user WHERE id = " . $_SESSION['user_id'];
@@ -21,11 +19,11 @@ $query = "";
 
 if ( (!empty($_GET['t'])) && (!empty($_GET['s'])) )
 {
-    $reload = urldecode($_GET['t']) . " aktualisieren";
-    $query = "?s=" . $_GET['s'];
+	$reload = stripslashes(urldecode($_GET['t'])) . " aktualisieren";
+	$query = "?s=" . $_GET['s'];
 } else
 {
-    $reload = "alle meine Feeds aktualisieren";
+	$reload = "alle meine Feeds aktualisieren";
 }
 
 echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
@@ -45,13 +43,14 @@ echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
 <?php
 if ($_SESSION['public'] != 1)
 {
-   echo ' <a href="logout.php" target="_top">Logout</a>/
-<a href="profil.php" target="dataFrame">Profil</a>/
-<a href="update.php' . $query . '" target="dataFrame">' . $reload . '</a>';
+	# <img src="./images/update.gif" alt="" /> <a href="update.php' . $query . '" target="dataFrame">' . $reload . '</a>&nbsp; &nbsp;
+	echo ' <img src="./images/profil.gif" alt="" /> <a href="profil.php" target="dataFrame">Profil</a>&nbsp; &nbsp;
+<img src="./images/logout.gif" alt="" /> <a href="logout.php" target="_top">Logout</a>';
 } else
 {
-   echo '<a href="logout.php" target="_top">Login</a>';
+	echo '<img src="./images/login.gif" alt="" /> <a href="./" target="_top">Login</a>';
 }
+
 #echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><acronym title="' . $row['descr'] . '">' . $row['title'] . '</b >';
 ?>
 </span>

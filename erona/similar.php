@@ -1,12 +1,11 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
 
 include("connect.php");
 include("session.php");
 
 if ( (!isset($_SESSION['user_id'])) ) // || ($_SESSION['public'] == 1) )
 {
-	header("Location: http://wwworker.com/erona/login.php");
+	header("Location: http://" . ERONA_URL . "login.php");
 }
 
 echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
@@ -37,29 +36,29 @@ echo '<table>';
 
 for ($i = 0; $i < (count($feeds) - 1); $i++)
 {
-    $abo = 1;
-    $sql = "SELECT " . $feeds[$i]['id'] . " IN (" . $_SESSION['feed_liste'] . ")";
-    $res = mysql_query($sql);
-    if (!$row = @mysql_fetch_row($res))
-    {
-        $abo = 1;
-    } else
-    {
-        $abo = $row[0];
-    }
-    
-    if ($abo == 0)
-    {
-        $feeds_gefunden = TRUE;
+	$abo = 1;
+	$sql = "SELECT " . $feeds[$i]['id'] . " IN (" . $_SESSION['feed_liste'] . ")";
+	$res = mysql_query($sql);
+	if (!$row = @mysql_fetch_row($res))
+	{
+		$abo = 1;
+	} else
+	{
+		$abo = $row[0];
+	}
 
-        echo '<tr><td>&bull; <a href="' . $feeds[$i]['url'] . '">' . $feeds[$i]['title'] . '</a>&nbsp;(' . $feeds[$i]['reader'] . ' Leser)</td>';
+	if ($abo == 0)
+	{
+		$feeds_gefunden = TRUE;
 
-        echo '<td>&nbsp;[<a title="' . $feeds[$i]['title'] . ' abonnieren" href="abo.php?fid=' . $feeds[$i]['id'] . '&r=' . urlencode('similar.php?s=' . $_GET['s'] . '&t=' . $_GET['t']) . '">abonnieren</a>]&nbsp;</td>';
+		echo '<tr><td>&bull; <a href="' . $feeds[$i]['url'] . '">' . $feeds[$i]['title'] . '</a>&nbsp;(' . $feeds[$i]['reader'] . ' Leser)</td>';
 
-        #echo '<td>&nbsp;[<a target="_blank" title="Ist dieser Eintrag eine Doublette oder gibt es ein Problem beim Updaten?" href="ffehler.php?fid=' . $feeds[$i]['id'] . '&r=feeds.php">Probleme?</a>]</td>';
-        
-        echo '</tr>';
-    }
+		echo '<td>&nbsp;[<a title="' . $feeds[$i]['title'] . ' abonnieren" href="abo.php?fid=' . $feeds[$i]['id'] . '&r=' . urlencode('similar.php?s=' . $_GET['s'] . '&t=' . $_GET['t']) . '">abonnieren</a>]&nbsp;</td>';
+
+		#echo '<td>&nbsp;[<a target="_blank" title="Ist dieser Eintrag eine Doublette oder gibt es ein Problem beim Updaten?" href="ffehler.php?fid=' . $feeds[$i]['id'] . '&r=feeds.php">Probleme?</a>]</td>';
+
+		echo '</tr>';
+	}
 
 }
 
@@ -67,7 +66,7 @@ echo '</table>';
 
 if (!$feeds_gefunden)
 {
-    echo "Keine ähnlichen Feeds gefunden... Dieser Feed wird wohl nur von Dir gelesen ;-)";
+	echo "Keine ähnlichen Feeds gefunden... Dieser Feed wird wohl nur von Dir gelesen ;-)";
 }
 ?>
 </span>

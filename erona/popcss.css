@@ -1,0 +1,205 @@
+body {
+	position: relative;
+	font-family: Tahoma, Verdana, sans-serif;
+	font-size: 0.8em;
+}
+
+img {
+	border: 0;
+	vertical-align: bottom;
+}
+
+a, a:link, a:visited, a:hover, a:active {
+	color: Purple;
+}
+
+.kopf {
+	font-size: 1.2em;
+	font-style: normal;
+	line-height: normal;
+	font-weight: bold;
+	font-variant: normal;
+	color: #060;
+}
+
+.erona {
+	color: #00cc00;
+}
+
+.ok {
+	color: #006600;
+}
+
+.nok {
+	color: #CC0000;
+}
+
+.nav {
+	font-size: 0.9em;
+	color: #000000;
+	vertical-align: text-bottom;
+}
+
+.nav a {
+	text-decoration: none;
+	font-weight: bolder;
+	color: purple;
+}
+
+.navsmall {
+	font-size: 0.8em;
+	color: #000000;
+
+}
+
+.navsmall a {
+	text-decoration: none;
+	font-weight: bolder;
+	color: purple;
+}
+
+.feedliste, .itemliste, .date, .headline {
+	font-size: 0.8em;
+	line-height: 150%;
+}
+
+.sidebar {
+	font-size: 0.7em;
+	line-height: 120%;
+}
+
+.entry {
+	line-height: 140%;
+	margin-bottom: 10px;
+
+}
+
+.feedliste {
+	list-style-image: url(./images/folder_green.gif);
+	margin-left: 1em;
+	padding-left: 1em;
+	list-style-position: outside;
+}
+
+.itemliste {
+	list-style-type: none;
+	list-style-position: outside;
+	margin-left: 0em;
+	padding-left: 0em;
+}
+
+.dateline {
+	/* margin-left: 5.5em; */
+	color: #000;
+	font-size: 0.8em;
+	vertical-align: baseline;
+}
+
+.date, .date a {
+	text-align: right;
+	width: 4em;
+	float: left;
+	display: inline;
+	color: #000;	
+}
+
+.headline {
+	margin-left: 5.5em;
+}
+
+.datablog {
+	font-size: 0.8em;
+}
+
+.dataheadline {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.data {
+	width: 30em;
+	font-family: Georgia, serif;
+	line-height: 150%;
+}
+
+.feedliste a {
+	text-decoration: none;
+	border-bottom: 1px dotted purple;
+}
+
+.feedliste img {
+	vertical-align: text-bottom;
+}
+
+.search {
+	font-size: 0.8em;
+}
+
+fieldset {
+    margin : 0 1em 0 0;
+    padding : 1em;
+    border : 1px solid #333;
+}
+
+legend {
+    font-weight : bold;
+    color : #333;
+    margin : 0;
+    padding : 0.5em;
+    font-size: 0.9em;
+}
+
+label {
+    display : block;
+}
+
+form {
+	padding: 0px;
+	margin: 0px;
+}
+
+input {
+	font-size: 0.9em;
+	font-weight: bold;
+	color: purple;
+	/* background-color: #66CC00; */
+	width: 200px;
+	border: 1px inset purple;
+}
+
+div.nav {
+	text-align: right;
+	border-width: 1px 0px;
+	border-style: dotted;
+	border-color: purple;
+	padding: 2px 0px;
+	margin-top: 2px;
+	font-size: 0.7em;
+	vertical-align: text-bottom;
+}
+
+form {
+	padding: 0px;
+	margin: 0px;
+}
+
+div.row {
+	clear: both;
+	padding-top: 5px;
+}
+
+div.row span.label {
+	float: left;
+	width: 250px;
+	text-align: left;
+	font-size: 0.8em;
+	color: #060;
+	font-weight: bold;
+}
+
+div.row span.formw {
+	float: right;
+	width: 200px;
+	text-align: left;
+	font-size: 0.8em;	
+}

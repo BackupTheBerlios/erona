@@ -1,43 +1,58 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
 include("connect.php");
-@session_destroy();
+session_start();
+session_destroy();
 $user_session = FALSE;
 
-if ( (empty($_POST['user'])) )
-{
-	$meldung = "Kein Username angegeben... So kann das doch nicht gehen ;-) Versuchs nochmal.";
+#error_reporting(E_ALL);
 
-} elseif ( (!isset($_SESSION['user_id'])) )
+if ($_SERVER['HTTP_HOST'] == 'localhost')
 {
-	$sql = "SELECT * FROM user WHERE name='" . trim($_POST['user']) . "' AND password='" . trim($_POST['passwort']) . "'";
-	$row = mysql_fetch_array(mysql_query($sql));
+	$_POST['submit']   = '.';
+	$_POST['mail']     = 'itst';
+	$_POST['passwort'] = 'butterfly';
+}
+
+if ( !empty($_POST['submit']) )
+{
+	$user = mysql_real_escape_string(htmlspecialchars(trim($_POST['mail'])));
+	$pass = mysql_real_escape_string(htmlspecialchars(trim($_POST['passwort'])));
+
+	$sql = "SELECT * FROM user WHERE name='" . $user . "' AND password='" . $pass . "'";
+	$res = mysql_query($sql) or die(mysql_error() . ": " . $sql);
+	$row = mysql_fetch_array($res);
 	$user_id = $row['id'];
+	$lasttime = $row['lasttime'];
 
 	if ($user_id < 1)
 	{
-		$meldung = "Den Benutzer <i>" .  $_POST['user'] . "/" . $_POST['passwort'] . "</i> kennt eRONA nicht... So kann das doch nicht gehen ;-) Versuchs nochmal.";
+		$meldung = "Der Benutzername oder das Passwort ist falsch, oder beides ;) Bitte nochmal.";
 	} else
 	{
 		session_start();
 		$_SESSION["user_id"] = $user_id;
-		$_SESSION["user_name"] = $_POST['user'];
-		$_SESSION["death"] = time() + 900;
-		$_SESSION['public'] = 0;		
+		$_SESSION["user_name"] = $_POST['mail'];
+
+		$_SESSION["title"] = $row['title'];
+		$_SESSION["descr"] = $row['descr'];
+
+		$_SESSION["death"] = time() + 3600;
+		$_SESSION["lasttime"] = $lasttime;
+		$_SESSION["public_profile"] = $row['public'];
+		
+		$_SESSION['loggedin'] = TRUE;
+
 		//$_SESSION["public"] = $row['public'];
-		$meldung = "Willkommen, " . $_POST['user'];
+		$meldung = "Willkommen, " . $_POST['mail'];
 		$user_session = TRUE;
-        	echo '<a href="myfeeds.php" target="_top">Login ok, weiter gehts</a>.';
-                //header("Location: http://wwworker.com/erona/myfeeds.php");
-        	die();
+		#echo '<a href="myfeeds.php" target="_top">Login ok, weiter gehts</a>.';
+		header("Location: http://" . ERONA_URL . "myfeeds.php");
+		die();
 	}
 
-} elseif ( (isset($_SESSION['user_id'])) )
+} else
 {
-	$user_session = TRUE;
-}
-
-echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
+	echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -50,25 +65,18 @@ echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
 <body>
 <?php
 echo "<h3>$meldung</h3>";
-if (!$user_session)
-{
 ?>
 <div id="login">
-<form action="login.php" method="post">
+<form action="login.php" method="post" target="_top">
 <fieldset>
-<legend>Anmeldung</legend>
-<span class="left"><label for="user">E-Mail-Adresse:</label></span> <span class="right"><input name="user" type="text" /></span><br />
+<legend>Login</legend>
+<span class="left"><label for="mail">E-Mail-Adresse:</label></span> <span class="right"><input name="mail" type="text" /></span><br />
 <span class="left"><label for="passwort">Passwort:</label></span> <span class="right"><input name="passwort" type="password" /></span><br />
 </fieldset>
-<input value="Einloggen" name="" type="submit" />
+<input value="Einloggen" name="submit" type="submit" />
 </form>
-<a href="logout.php">Logout</a>
-<?php
-} else {
-?>
-<a href="index.php">Login ok, weiter gehts.</a>
+</body>
+</html>
 <?php
 }
 ?>
-</body>
-</html>

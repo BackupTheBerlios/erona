@@ -19,7 +19,7 @@ include("functions.php");
 
 if (!is_numeric($_GET['p']))
 {
-    die ('<h3>Warum habe ich einen Referer von dieser Seite in meinen Logs?</h3>Diese Seite kann von <a href="http://wwworker.com/erona/">eRONA</a>-Benutzern als Sidebar in ihren Browser integriert werden, um die aktuellsten Nachrichten aus ihren Nachrichten-Abonnements anzuzeigen.');
+    die ('<h3>Warum habe ich einen Referer von dieser Seite in meinen Logs?</h3>Diese Seite kann von <a href="http://" . ERONA_URL . "">eRONA</a>-Benutzern als Sidebar in ihren Browser integriert werden, um die aktuellsten Nachrichten aus ihren Nachrichten-Abonnements anzuzeigen.');
 }
 
 $target = "_main";
@@ -35,7 +35,7 @@ if ($row['id'] != $_GET['p'])
     die ("Diese Feed-Sammlung ist nicht öffentlich.");
 }
 
-$sql = "SELECT i.url AS iurl, i.title AS ititle, i.date AS idate, f.title AS ftitle, f.url AS furl FROM items AS i LEFT JOIN user_feeds ON i.feed_id = user_feeds.feed_id LEFT JOIN feeds AS f ON i.feed_id = f.id WHERE user_feeds.user_id = " . $_GET['p'] . " ORDER BY i.date DESC LIMIT 20";
+$sql = "SELECT i.url AS iurl, i.title AS ititle, i.date AS idate, f.title AS ftitle, f.url AS furl FROM items AS i LEFT JOIN user_feeds ON i.feed_id = user_feeds.feed_id LEFT JOIN feeds AS f ON i.feed_id = f.id WHERE user_feeds.user_id = " . $_GET['p'] . " ORDER BY i.date DESC LIMIT 10";
 $res = mysql_query($sql) or die(mysql_error() . " $sql");
 
 while ($row = mysql_fetch_array($res))
@@ -55,7 +55,7 @@ while ($row = mysql_fetch_array($res))
 }
 
 ?>
-<br />Powered by <a target="_content" href="http://wwworker.com/erona/"><strong>eRONA</strong></a>
+<br />Powered by <a target="_content" href="http://" . ERONA_URL . ""><strong>eRONA</strong></a>
 </span>
 </div>
 </body>

@@ -9,9 +9,9 @@
 
 <body>
 <?php
-require_once('magpierss-0.5.2/rss_fetch.inc');
-require_once('magpierss-0.5.2/rss_parse.inc');
-require_once('magpierss-0.5.2/rss_utils.inc');
+require_once('magpie/rss_fetch.inc');
+require_once('magpie/rss_parse.inc');
+require_once('magpie/rss_utils.inc');
 
 function bug_free_strtotime($str)
 {
@@ -40,25 +40,25 @@ if ($url != "0")
 	$clink = $feed->channel['link'];
 	$clang = $feed->channel['dc']['language'];
 	$cdesc = $feed->channel['description'];
-	
+
 	$ctitle_class = $clink_class = $clang_class = $cdesc_class = "nok";
 	$ftitle_class = $flink_class = $fdesc_class = $ftime_class = "nok";
-	
+
 	if ($ctitle != "")
 	{
 		$ctitle_class = "ok";
 	} else {
 		$error = TRUE;
 	}
-	
-	
+
+
 	if ($clink != "")
 	{
 		$clink_class = "ok";
 	} else {
 		$error = TRUE;
 	}
-	
+
 	if ($clang != "")
 	{
 		$clang_class = "ok";
@@ -77,34 +77,34 @@ if ($url != "0")
 	foreach ($feed->items as $item)
 	{
 		$flink = $item['link'];
-		$ftitle = $item['title']; 
-  		$ftime = parse_w3cdtf($item['dc']['date']);
+		$ftitle = $item['title'];
+		$ftime = parse_w3cdtf($item['dc']['date']);
 		$fdesc = $item['description'];
 		#echo '<li>' . $ftime . ': <a href="$flink">' . $ftitle . '</a></li>' . "\n";
 	}
 	#echo "</ul>\n";
-	
+
 	if ($ftime != -1)
 	{
 		$ftime_class = "ok";
 	} else {
 		$error = TRUE;
 	}
-	
+
 	if ($flink != "")
 	{
 		$flink_class = "ok";
 	} else {
 		$error = TRUE;
 	}
-	
+
 	if ($ftitle != "")
 	{
 		$ftitle_class = "ok";
 	} else {
 		$error = TRUE;
-	} 
-	
+	}
+
 	if ($fdesc != "")
 	{
 		$fdesc_class = "ok";

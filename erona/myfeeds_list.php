@@ -1,117 +1,130 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
+
+#apd_set_pprof_trace('./temp/apd/');
 
 include("connect.php");
 include("session.php");
 
 if (!@isset($_SESSION['user_id']))
 {
-	header("Location: http://wwworker.com/erona/login.php");
+	header("Location: http://" . ERONA_URL . "index.php");
 }
 
 $row = getFeeds("meine");
 
-/*
-$sql = sprintf("SELECT *
-FROM feeds
-LEFT JOIN user_feeds ON feeds.id = user_feeds.feed_id
-WHERE user_feeds.user_id = %s ORDER BY title ASC", $_SESSION['user_id']);
-$result = mysql_query($sql) or die(mysql_error() . $sql . "myfeeds_list.php");
-*/
-
-$sql = "SELECT title, descr FROM user WHERE id = " . $_SESSION['user_id'];
-$res = mysql_query($sql) or die(mysql_error() . $sql);
-$meinname = mysql_fetch_array($res);
-
-echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?".">";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>eRONA: Meine Feeds</title>
 <?php readfile(".metas"); ?>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="css.css" rel="stylesheet" type="text/css" />
-</head>
-<body style="border: 1px green;">
+
 <script type="text/javascript">
 <!--
-function reloadPage(t, s)
+var NextUpdate = <?php echo ( filemtime('./temp/startlastupdate') + UPDATE_CYCLE - time() ); ?>;
+var UpdateRunning = <?php echo (file_exists('./temp/updaterunning')) ? 1 : 0; ?>;
+
+function ZeitAnzeigen()
 {
-    parent.toolFrame.location.href = 'http://wwworker.com/erona/tools.php?t=' + t + '&s=' + s;
+	var absSekunden = Math.round(ZeitBerechnen());
+	var anzMinuten = Math.round(absSekunden / 60);
+
+	if (UpdateRunning == 1)
+	{
+		if ((Math.abs(absSekunden) % 60) == 0)
+		{
+			window.location.reload();
+		}
+		window.document.Anzeige.Zeit.value = "Update running.";
+	} else
+	{
+		/* if (anzMinuten <= 0)
+		{
+			window.location.reload();
+		} */
+
+		if (anzMinuten == 1)
+		{
+			window.document.Anzeige.Zeit.value = "einer Minute";
+		}
+
+		if (anzMinuten > 1)
+		{
+			window.document.Anzeige.Zeit.value = anzMinuten + " Minuten";
+		}
+
+		window.setTimeout('ZeitAnzeigen()',1000);
+	}
 }
--->
+
+function ZeitBerechnen()
+{
+	NextUpdate = NextUpdate - 1;
+	return ( NextUpdate );
+}
+// -->
+</script>
+
+</head>
+<body style="border: 1px green;" onLoad="window.setTimeout('ZeitAnzeigen()',0)">
+<script type="text/javascript">
+<!--
+function popup (url, target) {
+	self.name = 'erona';
+	fenster=window.open(url, target, "width=600,height=400,status=no,scrollbars=yes,resizable=no");
+	fenster.focus();
+}
+//-->
 </script>
 <?php
 
-echo '<h3>' . $meinname['title'] . '</h3><em>' . $meinname['descr'] . '</em><br /><br />';
+
+echo '<span class="kopf"><acronym title="easy RSS Online News Aggregator">eRONA</acronym></span>
+&nbsp;&nbsp;&nbsp;
+<span class="nav">';
 
 if ($_SESSION['public'] != 1)
 {
-    echo 'Feeds
-<span class="nav">
-<a href="feeds.php"target="mainFrame">abonnieren</a>/ <a href="#neu">hinzufügen</a>/ <a href="#imp">importieren</a>/ <a href="#exp">exportieren</a><br /><br />
-</span>';
-}
-
-echo '<span class="liste">
-<a onclick="reloadPage(' . "''" . ', ' . "'" . 'meine' . "'" . ');" target="mainFrame" href="myfeeds_index.php?s=meine"><b>Meine Feeds</b></a><br />';
-
-/*
-while ($row = mysql_fetch_array($result))
+	# <img src="./images/update.gif" alt="" /> <a href="update.php' . $q&uuml;ry . '" target="dataFrame">' . $reload . '</a>&nbsp; &nbsp;
+	echo ' <img src="./images/profil.gif" alt="" /> <a href="profil.php" target="dataFrame" onclick="popup(\'profil.php\', \'profil\'); return false;">Profil</a>&nbsp; &nbsp;
+<img src="./images/logout.gif" alt="" /> <a href="logout.php" target="_top">Logout</a>';
+} else
 {
-      echo '&bull; <a onclick="reloadPage(' . "'" . urlencode($row['title']) . "'" . ');" target="mainFrame" href="myfeeds_index.php?s=' . $row['id'] . '">' . $row['title'] . '</a> (<a title="Abo von ' . $row['title'] . ' kündigen" href="deabo.php?fid=' . $row['id'] . '&r=myfeeds_index.php?s=0" target="mainFrame">x</a>)<br />';
-}
-*/
-
-for ($i = 0; $i < (count($row) - 1); $i++)
-{
-      echo '&bull; <a onclick="reloadPage(' . "'" . urlencode($row[$i]['title']) . "'" . ', ' . $row[$i]['id'] . ');" target="mainFrame" href="myfeeds_index.php?s=' . $row[$i]['id'] . '">' . $row[$i]['title'] . '</a>';
-      
-      if ($_SESSION['public'] != 1)
-      {
-          echo ' (<a title="Abo von ' . $row[$i]['title'] . ' kündigen" href="deabo.php?fid=' . $row[$i]['id'] . '&r=' . urlencode('myfeeds_index.php?s=meine') . '" target="mainFrame">x</a>)';
-          echo ' (<a title="Ähnliche Feeds anzeigen" href="similar.php?s=' . $row[$i]['id'] . '&t=' . urlencode($row[$i]['title']) . '" target="mainFrame">ä</a>)';
-      }
-      
-      echo "<br />\n";
+	echo '<img src="./images/login.gif" alt="" /> <a href="./" target="_top">Login</a>';
 }
 
-echo '</span>
-<br />';
+echo '<br /><form name="Anzeige" action="" style="font-size: 0.8em; margin-top: 5px; margin-bottom: 5px;">
+N&auml;chstes Update in <input readonly size="8" style="font-weight: normal; font-size: 0.8em; border: 0px solid white;" name="Zeit" value="30 Minuten">
+</form></span>
+<div class="dataheadline">' . $_SESSION['title'] . '</div>';
 
 if ($_SESSION['public'] != 1)
 {
-    echo '<form action="new_feed.php" method="post" target="dataFrame">
-<fieldset>
-<legend><a name="neu">Feed hinzufügen</a></legend>
-
-<label for="rss">URL des Feeds: </lablel><br />
-<input type="text" name="rss" size="30" /><br />
-
-<input type="hidden" name="stage" value="1" />
-<input type="submit" value="Feed hinzufügen" />
-</fieldset>
-</form>
-
-<form action="import.php" method="post" target="dataFrame" enctype="multipart/form-data">
-<fieldset>
-<legend><a name="imp">Feeds importieren</a></legend>
-
-<label for="probe">Datei:</label><br />
-<input type="file" name="probe" />
-
-<input type="submit" value="Feeds importieren" />
-</fieldset>
-</form>
-
-<form action="export.php" method="post">
-<fieldset>
-<legend><a name="exp">Feeds exportieren</a></legend>
-<input type="submit" value="Feeds exportieren" />
-</fieldset>
-</form>';
+	echo '<div class="navr" style="line-height: 120%;">
+<a href="feeds.php" target="mainFrame" onclick="popup(\'feeds.php\', \'feeds\'); return false;">Alle Feeds</a> |
+<a href="#">Meine Feeds</a> |
+<a href="new.php" target="mainFrame" onclick="popup(\'new.php\', \'new\'); return false;">Feed hinzuf&uuml;gen</a><br />
+<a href="import.php" target="mainFrame" onclick="popup(\'import.php\', \'import\'); return false;">OPML-Import</a> |
+<a href="export.php" target="mainFrame" onclick="popup(\'export.php\', \'export\'); return false;">OPML-Export</a></div>
+';
 }
+
+echo '<div class="dataheadline" style="margin-bottom: 0px; margin-top: 10px;"><a target="mainFrame" href="myfeeds_index.php?s=meine"><img src="./images/gohome.gif" /></a> <a target="mainFrame" href="myfeeds_index.php?s=meine">Inbox</a></div>
+<ul class="feedliste" style="margin-top: 5px;">
+';
+
+$_feeds = count($row) - 1;
+for ($i = 0; $i < $_feeds; $i++)
+{
+	echo '<li><a target="mainFrame" href="myfeeds_index.php?s=' . $row[$i]['id'] . '">' . $row[$i]['title'] . '</a></li>
+';
+}
+
+echo '</ul>
+';
 
 ?>
 

@@ -3,6 +3,8 @@
 session_start();
 session_destroy();
 
-header("Location: http://wwworker.com/erona/index.php");
+include("connect.php");
+
+header("Location: http://" . ERONA_URL . "index.php");
 
 ?>

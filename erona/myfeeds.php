@@ -1,14 +1,12 @@
 <?php
 
-error_reporting(E_ERROR | E_PARSE | E_WARNING);
-
 if ( (!empty($_GET['mode'])) && (is_numeric($_GET['p'])) )
 {
     include("connect.php");
     include("functions.php");
-    include("rss10.inc");
-    
-    $only_rss = FALSE;
+    include("./libs/rss10.inc");
+
+    header("Content-Type: application/rss+xml");
 
     if (!isset($_SESSION['user_id']))
     {
@@ -19,15 +17,9 @@ if ( (!empty($_GET['mode'])) && (is_numeric($_GET['p'])) )
         $only_rss = TRUE;
     }
 
-    #include("reflog/page.php");
     getRSS($_GET['p']);
-
-    if ($only_rss)
-    {
-        $_SESSION['public']  = 0;
-        session_destroy();
-    }
-
+    
+    session_destroy();
     exit;
 }
 
@@ -38,10 +30,10 @@ $query = "";
 
 if (!isset($_SESSION['user_id']))
 {
-	header("Location: http://wwworker.com/erona/login.php");
+	header("Location: http://" . ERONA_URL . "index.php");
 } else
 {
-	echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">";
+	echo "<?xml version=\"1.0\" encoding=\"utf-8\"?".">";
 	#include("reflog/page.php");
 ?>
 
@@ -49,28 +41,19 @@ if (!isset($_SESSION['user_id']))
 <html>
 <head>
 <title>eRONA: Meine Feeds</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <?php readfile(".metas"); ?>
 </head>
 
-<frameset rows="30,*" cols="*" frameborder="2" border="2" framespacing="1">
 
-  <frame frameborder="2" border="2" src="tools.php" name="toolFrame" title="Logout, Mein Profil, Feeds aktualisieren" longdesc="http://wwworker.com/erona/frames.html#toolFrame">
-
-  <frameset cols="300,*" frameborder="2" border="2" framespacing="1">
-
-    <frame frameborder="2" border="2" src="myfeeds_list.php" name="feedsFrame" title="Abonnierte Feeds, einen Feed hinzufügen" longdesc="http://wwworker.com/erona/frames.html#feedsFrame">
-
-    <frameset rows="200,*" frameborder="2" border="2" framespacing="1">
-
-      <frame frameborder="2" border="2" src="myfeeds_index.php?s=meine" name="mainFrame" title="Liste von Items meiner Feeds" longdesc="http://wwworker.com/erona/frames.html#mainFrame">
-      <frame frameborder="2" border="2" src="hallo.html" name="dataFrame" title="Text eines Items" longdesc="http://wwworker.com/erona/frames.html#dataFrame">
-
+  <frameset cols="290,*" bordercolor="#006600">
+    <frame src="myfeeds_list.php" name="feedsFrame" title="Abonnierte Feeds, einen Feed hinzufügen" longdesc="http://" . ERONA_URL . "frames.html#feedsFrame">
+    <frameset rows="218,*" bordercolor="#006600">
+      <frame src="myfeeds_index.php?s=meine" name="mainFrame" title="Liste von Items meiner Feeds" longdesc="http://" . ERONA_URL . "frames.html#mainFrame">
+      <frame src="hallo.html" name="dataFrame" title="Text eines Items" longdesc="http://" . ERONA_URL . "frames.html#dataFrame">
+    </frameset>
   </frameset>
-</frameset>
-<noframes><body>
-
-</body></noframes>
+  <noframes></noframes>
 </html>
 <?php
 }
