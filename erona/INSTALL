@@ -1,0 +1,12 @@
+REQUIREMENTS
+
+	eRONA will run on a PHP-enabled Webserver, using MySql as database.
+
+QUICK START
+
+	After unpacking the files, create a database and load the basic
+	structures from erona.sql.
+	
+	Then update the database connection parameters in connect.php.
+	
+	Don't forget to setup a cron run for cronup.php every 2-4 hours or so.
