@@ -12,7 +12,7 @@ if ( (!empty($_SESSION['death'])) && ($_SESSION['death']< time()) )
     header("Location: http://wwworker.com/erona/login.php");
 }
 
-if (!empty($_GET['p']))
+if ( (!empty($_GET['p'])) && ($_GET['p'] == intval($_GET['p'])) )
 {
     $sql = "SELECT COUNT(id) as cid FROM user WHERE id = " . $_GET['p'] . " AND public = 1";
     $res = mysql_query($sql);

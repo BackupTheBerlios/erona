@@ -1,8 +1,8 @@
 <?php
-$dbu = "sascha_worker";
-$dbp = "a210fHJslGa";
-$dbn = "sascha_wwworker_com";
-$dbs = "localhost";
+$dbu = "dbuser";
+$dbp = "dbpassword";
+$dbn = "dbname";
+$dbs = "dbserver";
 
 mysql_connect($dbs, $dbu, $dbp) or die("dbms error");
 mysql_select_db($dbn) or die("dn error");
